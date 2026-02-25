@@ -1,16 +1,16 @@
-const processOrderNotWorking = (orderId) => {
-  if (!orderId) {
-    console.log("Invalid order ID", orderId);
-    return;
-  }
-  let orderDetails;
-  setTimeout(() => {
-    console.log("Fetched order details for order ID:", orderId);
-    orderDetails = { orderId, status: "Processed" };
-  }, 1000);
+// const processOrderNotWorking = (orderId) => {
+//   if (!orderId) {
+//     console.log("Invalid order ID", orderId);
+//     return;
+//   }
+//   let orderDetails;
+//   setTimeout(() => {
+//     console.log("Fetched order details for order ID:", orderId);
+//     orderDetails = { orderId, status: "Processed" };
+//   }, 1000);
 
-  return orderDetails;
-};
+//   return orderDetails;
+// };
 
 // As you can see this code did not behave as expected
 let initOrderId = 100;
@@ -22,17 +22,35 @@ console.log("Order details:", newOrder);
 // --------------------------------------------------------------------
 
 //TODO: How many parameters should this function take?
-const processOrderPromise = () => {
+const processOrderPromise = (orderId) => {
   //TODO: Implement a function using a promises to fetch order details and return the order after fetching [2 Marks]
+
   //TODO: Handle invalid order ID [1 Mark]
 
-  setTimeout(() => {
-    console.log("Fetching order details for order ID:", orderId);
-  }, 1000);
+  return new Promise((resolve, reject) => {
+    // Handle invalid order ID
+    if (orderId == null) {
+      console.log("Invalid order ID", orderId);
+      reject(new Error("Invalid order ID"));
+      return;
+    }
+
+    setTimeout(() => {
+      console.log("Fetching order details for order ID:", orderId);
+      const orderDetails = { orderId, status: "Processed" };
+      resolve(orderDetails);
+    }, 1000);
+  });
 };
 
 //TODO: Call processOrderPromise() properly to console log the returned order details and catch any errors [1 Mark]
-
+processOrderPromise(initOrderId)
+  .then((order) => {
+    console.log("Order details:", order);
+  })
+  .catch((error) => {
+    console.log("Invalid order ID", initOrderId);
+  });
 const processOrderNotWorking = (orderId) => {
   if (!orderId) {
     console.log("Invalid order ID", orderId);
@@ -60,8 +78,13 @@ const processOrderAwait = async (orderId) => {
   //Handle error [1 Mark]
   //[HINT]: Use the promise from processOrderPromise [1 Mark]
   //[NOTE]: You do not have to return any value, console log here
+  try {
+    const order = await processOrderPromise(orderId);
+    console.log("Order details:", order);
+  } catch (error) {
+    console.log("Invalid order ID", orderId);
+  }
 };
 
 //TODO: Call processOrderAwait()
-
-
+processOrderAwait(initOrderId);
